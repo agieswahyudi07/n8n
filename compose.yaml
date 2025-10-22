@@ -1,24 +1,24 @@
 services:
   n8n:
-    image: docker.n8n.io/n8nio/n8n
+    image: n8nio/n8n:stable
     restart: always
     ports:
-      - "127.0.0.1:5678:5678"
+      - "5678"
     labels:
       - traefik.enable=true
-      - traefik.http.routers.n8n.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
-      - traefik.http.routers.n8n.tls=true
-      - traefik.http.routers.n8n.entrypoints=web,websecure
-      - traefik.http.routers.n8n.tls.certresolver=mytlschallenge
-      - traefik.http.middlewares.n8n.headers.SSLRedirect=true
-      - traefik.http.middlewares.n8n.headers.STSSeconds=315360000
-      - traefik.http.middlewares.n8n.headers.browserXSSFilter=true
-      - traefik.http.middlewares.n8n.headers.contentTypeNosniff=true
-      - traefik.http.middlewares.n8n.headers.forceSTSHeader=true
-      - traefik.http.middlewares.n8n.headers.SSLHost=${DOMAIN_NAME}
-      - traefik.http.middlewares.n8n.headers.STSIncludeSubdomains=true
-      - traefik.http.middlewares.n8n.headers.STSPreload=true
-      - traefik.http.routers.n8n.middlewares=n8n@docker
+      - traefik.http.routers.${USER}.rule=Host(`${SUBDOMAIN}.${DOMAIN_NAME}`)
+      - traefik.http.routers.${USER}.tls=true
+      - traefik.http.routers.${USER}.entrypoints=web,websecure
+      - traefik.http.routers.${USER}.tls.certresolver=mytlschallenge
+      - traefik.http.middlewares.${USER}.headers.SSLRedirect=true
+      - traefik.http.middlewares.${USER}.headers.STSSeconds=315360000
+      - traefik.http.middlewares.${USER}.headers.browserXSSFilter=true
+      - traefik.http.middlewares.${USER}.headers.contentTypeNosniff=true
+      - traefik.http.middlewares.${USER}.headers.forceSTSHeader=true
+      - traefik.http.middlewares.${USER}.headers.SSLHost=${DOMAIN_NAME}
+      - traefik.http.middlewares.${USER}.headers.STSIncludeSubdomains=true
+      - traefik.http.middlewares.${USER}.headers.STSPreload=true
+      - traefik.http.routers.${USER}.middlewares=${USER}@docker
     environment:
       - N8N_HOST=${SUBDOMAIN}.${DOMAIN_NAME}
       - N8N_PORT=5678
@@ -27,14 +27,14 @@ services:
       - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
     volumes:
-      - n8n-landingo-data:/home/node/.n8n
+      - n8n-data:/home/node/.n8n
       - ./local-files:/files
     networks:
       - traefik-network
       - internal-network
 
 volumes:
-  n8n-landingo-data:
+  n8n-data:
     external: true
 
 networks:
