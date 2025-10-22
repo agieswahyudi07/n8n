@@ -27,14 +27,18 @@ services:
       - WEBHOOK_URL=https://${SUBDOMAIN}.${DOMAIN_NAME}/
       - GENERIC_TIMEZONE=${GENERIC_TIMEZONE}
     volumes:
-      - n8n_data:/home/node/.n8n
+      - n8n-landingo-data:/home/node/.n8n
       - ./local-files:/files
     networks:
       - traefik-network
+      - internal-network
 
 volumes:
-  n8n_data:
+  n8n-landingo-data:
+    external: true
 
 networks:
   traefik-network:
+    external: true
+  internal-network:
     external: true
